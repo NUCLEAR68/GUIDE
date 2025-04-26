@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>A* Path Visualizer</title>
+    <link rel="stylesheet" href="../static/style.css">
+
+</head>
+<body>
+    <div class="container">
+        <h1>Navigation system</h1>
+        <label>Start Node:</label>
+        <input type="number" id="start" min="1" max="18">
+        <label>End Node:</label>
+        <input type="number" id="end" min="1" max="18">
+        <button onclick="getPath()">Find Path</button>
+
+        <div id="pathResult"></div>
+        <div class="image-display">
+            <div id="currentImgDiv"></div>
+            <div id="nextImgDiv"></div>
+        </div>
+        <button onclick="nextStep()" id="nextButton" style="display:none;">Next Step</button>
+    </div>
+
+    <script>
+        let path = [];
+        let images = [];
+        let index = 0;
+
+        function getPath() {
+            const start = document.getElementById('start').value;
+            const end = document.getElementById('end').value;
+            fetch('/get-path', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({start, end})
+            })
+            .then(res => res.json())
+            .then(data => {
+                path = data.path;
+                images = data.images;
+                index = 0;
+                document.getElementById('pathResult').innerText = "Path: " + path.join(' -> ');
+                document.getElementById('nextButton').style.display = 'block';
+                displayImages();
+            });
+        }
+
+        function displayImages() {
+            if (index < path.length) {
+                document.getElementById('currentImgDiv').innerHTML = `
+                    <h3>Current: Node ${path[index]}</h3>
+                    <img src="/static/images/${images[index]}" width="200">
+                `;
+                if (index + 1 < path.length) {
+                    document.getElementById('nextImgDiv').innerHTML = `
+                        <h3>Next: Node ${path[index + 1]}</h3>
+                        <img src="/static/images/${images[index + 1]}" width="200">
+                    `;
+                } else {
+                    document.getElementById('nextImgDiv').innerHTML = `<h3>Destination Reached 🎉</h3>`;
+                }
+            }
+        }
+
+        function nextStep() {
+            if (index + 1 < path.length) {
+                index++;
+                displayImages();
+            }
+        }
+    </script>
+</body>
+</html>
