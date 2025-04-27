@@ -1,26 +1,90 @@
+/* Full background image */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+    background-image: url('../static/images/iitjammubg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
 }
 
-.container {
-    padding: 20px;
-    background: white;
-    margin: 50px auto;
+/* Heading and logo */
+.header {
+    padding-top: 20px;
+}
+
+.main-heading {
+    font-size: 36px;
+    color: black;
+    margin-bottom: 10px;
+}
+
+.top-right-logo {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 160px;
+    height: 160px;
+}
+
+/* Input box */
+.input-box {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
     border-radius: 10px;
-    max-width: 700px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+/* Path display box */
+.path-box {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+/* Images display + translucent */
+.image-box {
+    background: rgba(255, 255, 255, 0.7);
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 20px;
+    width: 70%;
 }
 
 .image-display {
     display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 20px;
 }
 
 img {
-    border: 3px solid #ccc;
     border-radius: 10px;
-    margin: 10px;
+    width: 300px;
+    height: 200px;
 }
+
+/* Step button */
+#stepButtons {
+    text-align: center;
+}
+
+#nextButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #f0f2f4;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
