@@ -2,25 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>A* Path Visualizer</title>
+    <title>GUIDE</title>
     <link rel="stylesheet" href="../static/style.css">
-
 </head>
 <body>
-    <div class="container">
-        <h1>Navigation system</h1>
-        <label>Start Node:</label>
-        <input type="number" id="start" min="1" max="18">
-        <label>End Node:</label>
-        <input type="number" id="end" min="1" max="18">
-        <button onclick="getPath()">Find Path</button>
 
-        <div id="pathResult"></div>
+    <div class="header">
+        <h1 class="main-heading">GUIDE</h1>
+        <img src="../static/images/logo.png" alt="IIT Jammu Logo" class="top-right-logo">
+        <div class="input-box">
+            <label for="start">Initial location:</label>
+            <input type="number" id="start" min="1" max="18">
+            <label for="end">Final destination:</label>
+            <input type="number" id="end" min="1" max="18">
+            <button onclick="getPath()">Find Path</button>
+        </div>
+    </div>
+
+    <div class="path-box" id="pathResult"></div>
+
+    <div class="image-box" id="imageContainer" style="display: none;">
         <div class="image-display">
             <div id="currentImgDiv"></div>
             <div id="nextImgDiv"></div>
         </div>
-        <button onclick="nextStep()" id="nextButton" style="display:none;">Next Step</button>
+
+        <div id="stepButtons">
+            <button onclick="nextStep()" id="nextButton">Next Step</button>
+            
+        </div>
     </div>
 
     <script>
@@ -42,7 +52,7 @@
                 images = data.images;
                 index = 0;
                 document.getElementById('pathResult').innerText = "Path: " + path.join(' -> ');
-                document.getElementById('nextButton').style.display = 'block';
+                document.getElementById('imageContainer').style.display = 'block'; // Show images now
                 displayImages();
             });
         }
@@ -51,12 +61,12 @@
             if (index < path.length) {
                 document.getElementById('currentImgDiv').innerHTML = `
                     <h3>Current: Node ${path[index]}</h3>
-                    <img src="/static/images/${images[index]}" width="200">
+                    <img src="/static/images/${images[index]}" width="300" height="200">
                 `;
                 if (index + 1 < path.length) {
                     document.getElementById('nextImgDiv').innerHTML = `
                         <h3>Next: Node ${path[index + 1]}</h3>
-                        <img src="/static/images/${images[index + 1]}" width="200">
+                        <img src="/static/images/${images[index + 1]}" width="300" height="200">
                     `;
                 } else {
                     document.getElementById('nextImgDiv').innerHTML = `<h3>Destination Reached 🎉</h3>`;
@@ -71,5 +81,6 @@
             }
         }
     </script>
+
 </body>
 </html>
