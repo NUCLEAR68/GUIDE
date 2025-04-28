@@ -7,7 +7,7 @@ app = Flask(__name__)
 graph = {
     1: {'connections': {2: 2, 3: 1}, 'image': '1.png'},
     2: {'connections': {1: 2}, 'image': '2.png'},
-    3: {'connections': {1: 1,4: 1}, 'image': '3.png'},
+    3: {'connections': {1: 1, 4: 1}, 'image': '3.png'},
     4: {'connections': {3: 1, 14: 15, 5: 3}, 'image': '4.png'},
     5: {'connections': {4: 3, 6: 2}, 'image': '5.png'},
     6: {'connections': {5: 2, 7: 1, 9: 3, 12: 2}, 'image': '6.png'},
@@ -23,7 +23,6 @@ graph = {
     16: {'connections': {17: 3, 15: 10}, 'image': '16.png'},
     17: {'connections': {16: 3, 18: 1}, 'image': '17.png'},
     18: {'connections': {17: 1, 12: 1, 13: 1}, 'image': '18.png'},
-
 }
 
 # A* Algorithm
@@ -63,6 +62,10 @@ def get_path():
     data = request.json
     start = int(data['start'])
     end = int(data['end'])
+
+    if start < 1 or start > 18 or end < 1 or end > 18:
+        return jsonify({'error': '⚠️ Invalid node numbers. No path found'})
+
     path = a_star_search(start, end)
     images = [graph[node]['image'] for node in path]
     return jsonify({'path': path, 'images': images})
