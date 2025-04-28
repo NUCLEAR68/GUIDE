@@ -7,80 +7,93 @@
 </head>
 <body>
 
-    <div class="header">
-        <h1 class="main-heading">GUIDE</h1>
-        <img src="../static/images/logo.png" alt="IIT Jammu Logo" class="top-right-logo">
-        <div class="input-box">
-            <label for="start">Initial location:</label>
-            <input type="number" id="start" min="1" max="18">
-            <label for="end">Final destination:</label>
-            <input type="number" id="end" min="1" max="18">
-            <button onclick="getPath()">Find Path</button>
-        </div>
+<div class="header">
+    <h1 class="main-heading">GUIDE</h1>
+    <img src="../static/images/logo.png" alt="IIT Jammu Logo" class="top-right-logo">
+    <div class="input-box">
+        <label for="start">Initial location:</label>
+        <input type="number" id="start" min="1" max="18">
+        <label for="end">Final destination:</label>
+        <input type="number" id="end" min="1" max="18">
+        <button onclick="getPath()">Find Path</button>
+        <div id="errorMsg" style="color: red; font-weight: bold; margin-top: 10px;"></div>
+    </div>
+</div>
+
+<!-- ✅ Bring path-box out and above image -->
+<div style="margin-top: 30px; text-align: center;">
+    <div id="pathResult" style="display: inline-block; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 10px; font-weight: bold; font-size: 18px;"></div>
+</div>
+
+<!-- Image container -->
+<div class="image-box" id="imageContainer" style="display: none;">
+    <div class="image-display">
+        <div id="currentImgDiv"></div>
+        <div id="nextImgDiv"></div>
     </div>
 
-    <div class="path-box" id="pathResult"></div>
-
-    <div class="image-box" id="imageContainer" style="display: none;">
-        <div class="image-display">
-            <div id="currentImgDiv"></div>
-            <div id="nextImgDiv"></div>
-        </div>
-
-        <div id="stepButtons">
-            <button onclick="nextStep()" id="nextButton">Next Step</button>
-            
-        </div>
+    <div id="stepButtons">
+        <button onclick="nextStep()" id="nextButton">Next Step</button>
     </div>
+</div>
 
-    <script>
-        let path = [];
-        let images = [];
-        let index = 0;
+<!-- JavaScript -->
+<script>
+    let path = [];
+    let images = [];
+    let index = 0;
 
-        function getPath() {
-            const start = document.getElementById('start').value;
-            const end = document.getElementById('end').value;
-            fetch('/get-path', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({start, end})
-            })
-            .then(res => res.json())
-            .then(data => {
-                path = data.path;
-                images = data.images;
-                index = 0;
-                document.getElementById('pathResult').innerText = "Path: " + path.join(' -> ');
-                document.getElementById('imageContainer').style.display = 'block'; // Show images now
-                displayImages();
-            });
-        }
-
-        function displayImages() {
-            if (index < path.length) {
-                document.getElementById('currentImgDiv').innerHTML = `
-                    <h3>Current: Node ${path[index]}</h3>
-                    <img src="/static/images/${images[index]}" width="300" height="200">
-                `;
-                if (index + 1 < path.length) {
-                    document.getElementById('nextImgDiv').innerHTML = `
-                        <h3>Next: Node ${path[index + 1]}</h3>
-                        <img src="/static/images/${images[index + 1]}" width="300" height="200">
-                    `;
-                } else {
-                    document.getElementById('nextImgDiv').innerHTML = `<h3>Destination Reached 🎉</h3>`;
-                }
+    function getPath() {
+        const start = document.getElementById('start').value;
+        const end = document.getElementById('end').value;
+        fetch('/get-path', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({start, end})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById('errorMsg').innerText = data.error;
+                document.getElementById('pathResult').innerText = "";
+                document.getElementById('imageContainer').style.display = 'none';
+                return;
             }
-        }
 
-        function nextStep() {
+            document.getElementById('errorMsg').innerText = "";
+            path = data.path;
+            images = data.images;
+            index = 0;
+            document.getElementById('pathResult').innerText = "Path: " + path.join(' -> ');
+            document.getElementById('imageContainer').style.display = 'block';
+            displayImages();
+        });
+    }
+
+    function displayImages() {
+        if (index < path.length) {
+            document.getElementById('currentImgDiv').innerHTML = `
+                <h3>Current: Node ${path[index]}</h3>
+                <img src="/static/images/${images[index]}" width="300" height="200">
+            `;
             if (index + 1 < path.length) {
-                index++;
-                displayImages();
+                document.getElementById('nextImgDiv').innerHTML = `
+                    <h3>Next: Node ${path[index + 1]}</h3>
+                    <img src="/static/images/${images[index + 1]}" width="300" height="200">
+                `;
+            } else {
+                document.getElementById('nextImgDiv').innerHTML = `<h3>Destination Reached 🎉</h3>`;
             }
         }
-    </script>
+    }
+
+    function nextStep() {
+        if (index + 1 < path.length) {
+            index++;
+            displayImages();
+        }
+    }
+</script>
 
 </body>
 </html>
